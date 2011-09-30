@@ -1,14 +1,27 @@
 (ns pong.core
-  (:require [goog.events :as events]))
+  (:require [goog.events :as events]
+	    [goog.dom :as dom]))
+
+(def ballL 4)
+(def pdlWidth 16)
+(def pdlHeight 112)
+(def pdlPad 32) ;padding from wall
+
+(def size (dom/getViewportSize))
+(def centerX (/ (.width size) 2))
+(def centerY (/ (.height size) 2))
+
+(def pdl1X pdlPad)
+(def pdl2X (- (.width size) (+ pdlWidth pdlPad)))
 
 (def initial-state {:listeners {}
-		    :user :pdl1
-		    :ai :pdl2
-		    :ball {:x 0 :y 0}
-		    :pdl1 {:x 0 :y 0}
-		    :pdl2 {:x 0 :y 0}
-		    :height 0 
-		    :width 0})
+			 :user :pdl1
+			 :ai :pdl2
+			 :ball {:x centerX :y centerY}
+			 :pdl1 {:x pdl1X :y centerY}
+			 :pdl2 {:x pdl2X :y centerY}
+			 :height (.height size)
+			 :width (.width size)})
 
 (def state (atom initial-state))
 
@@ -31,17 +44,17 @@
      (doseq [f (-> @state :listeners event)]
        (f message))))
 
-(defn move [what pt]
-  (let [{x :x y :y} pt
-	{oldx :x oldy :y} (what @state)]
-    (swap! state #(assoc-in % [what] pt))
-    (send-event :re-draw {:what what
-			  :x x :y y
-			  :oldx oldx :oldy oldy})))
+(defn move [what pt dim]
+  (let [oldpt (what @state)]
+    (swap! state #(assoc % what pt))
+    (send-event :re-draw {:pt pt :oldpt oldpt :dim dim})))
 
-(defn move-pdl [who pt]
-  (let [{x :x y :y} pt
-	what (who @state)]
-   (fn [y]
-     (move what {:x x :y y}))))
+(defn move-pdl [who]
+  (let [what (who @state)
+        {x :x y :y} (what @state)]
+    (fn [y]
+      (move what {:x x :y y} {:width pdlWidth :height pdlHeight}))))
+
+(def move-user-pdl (move-pdl :user)) 
+(def move-ai-pdl (move-pdl :ai))
 

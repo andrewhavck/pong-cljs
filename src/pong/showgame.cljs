@@ -18,36 +18,19 @@
   (doto (graphics/createGraphics "100%" "100%")
         (.render background)))
 
-(def ballL 15)
-(def pdlWidth 15)
-(def pdlHeight 90)
-(def pdlPad 30) ; padding from wall
+(defn pt [x y]
+  {:x x :y y})
 
-(def canvas-size (. g (getPixelSize)))
-(def width (.width canvas-size))
-(def height (.height canvas-size))
-(def centerX (/ (.width canvas-size) 2))
-(def centerY (/ (.height canvas-size) 2))
+(defn dim [width height]
+  {:width width :height height})
 
-(def pdl1X pdlPad)
-(def pdl2X (- (.width canvas-size) (+ pdlWidth pdlPad)))
+(defn color [fill stroke]
+  {:fill fill :stroke stroke})
 
-(def move-user-pdl (pong/move-pdl :user {:x pdl1X :y centerY}))
-(def move-ai-pdl (pong/move-pdl :ai {:x pdl2X :y centerY}))
-
-(defn rect [x y fill stroke width height]
-  (fn [x y width height]
-    {:x x :y y
-     :fill fill :stroke stroke
-     :width width :height height}))
-   
-(def black-rect (rect 0 0 blackFill blackStroke 0 0))
-(def white-rect (rect 0 0 whiteFill blackStroke 0 0))
-
-(defn draw-rect [rect]
- (let [{x :x y :y
-       fill :fill stroke :stroke
-       width :width height :height} rect]
+(defn draw-rect [pt color dim]
+ (let [{x :x y :y} pt
+       {fill :fill stroke :stroke} color
+       {width :width height :height} dim]
   (doto (. g (drawRect))
        (.setSize width height)
        (.setPosition x y)
@@ -56,31 +39,16 @@
 
 (defn user-move-paddle [event]
   (let [y (- (.clientY event) 38)]
-   (move-user-pdl y)))
+   (pong/move-user-pdl y)))
 
-(def initialize-user-event-listener 
-  (events/listen background events/EventType.MOUSEMOVE user-move-paddle))
-
-(defn redraw-rect [data width height]
-  (let [{x :x y :y
-	 oldx :oldx
-	 oldy :oldy} data]	   
-  (draw-rect (black-rect oldx oldy width height))
-  (draw-rect (white-rect x y width height))))
-
-(defmulti redraw :what)
-
-(defmethod redraw :ball [data]
- (redraw-rect data ballL ballL))
-
-(defmethod redraw :default [data]
- (redraw-rect data pdlWidth pdlHeight))
+(defn redraw-rect [data]
+  (draw-rect (:oldpt data) (color blackFill blackStroke) (:dim data))
+  (draw-rect (:pt data) (color whiteFill blackStroke) (:dim data)))
 
 (pong/register :re-draw
  (fn [data]
-   (redraw data)))
+   (redraw-rect data)))
 
-(draw-rect (black-rect 0 0 "100%" "100%"))  ; draw background
-(draw-rect (white-rect centerX 0 5 "100%")) ; draw net
-(move-user-pdl centerY)
-(move-ai-pdl centerY)
+(events/listen background events/EventType.MOUSEMOVE user-move-paddle)
+(draw-rect (pt 0 0) (color blackFill blackStroke) (dim "100%" "100%"))  ; draw background
+(draw-rect (pt "50%" 0) (color whiteFill blackStroke) (dim 5 "100%"))  ; draw net
