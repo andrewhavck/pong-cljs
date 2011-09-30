@@ -25,6 +25,12 @@
 
 (def state (atom initial-state))
 
+(defn pt [x y]
+  {:x x :y y})
+
+(defn dim [width height]
+  {:width width :height height})
+
 (defn add-listener
   "Add listener to the game state"
   [state event f]
@@ -53,7 +59,10 @@
   (let [what (who @state)
         {x :x y :y} (what @state)]
     (fn [y]
-      (move what {:x x :y y} {:width pdlWidth :height pdlHeight}))))
+      (move what (pt x y) (dim pdlWidth pdlHeight)))))
+
+(defn move-ball [pt]
+  (move :ball pt (dim ballL ballL)))
 
 (def move-user-pdl (move-pdl :user)) 
 (def move-ai-pdl (move-pdl :ai))

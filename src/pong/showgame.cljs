@@ -18,12 +18,6 @@
   (doto (graphics/createGraphics "100%" "100%")
         (.render background)))
 
-(defn pt [x y]
-  {:x x :y y})
-
-(defn dim [width height]
-  {:width width :height height})
-
 (defn color [fill stroke]
   {:fill fill :stroke stroke})
 
@@ -39,7 +33,7 @@
 
 (defn user-move-paddle [event]
   (let [y (- (.clientY event) 38)]
-   (pong/move-user-pdl y)))
+    (pong/move-user-pdl y)))
 
 (defn redraw-rect [data]
   (draw-rect (:oldpt data) (color blackFill blackStroke) (:dim data))
@@ -50,5 +44,5 @@
    (redraw-rect data)))
 
 (events/listen background events/EventType.MOUSEMOVE user-move-paddle)
-(draw-rect (pt 0 0) (color blackFill blackStroke) (dim "100%" "100%"))  ; draw background
-(draw-rect (pt "50%" 0) (color whiteFill blackStroke) (dim 5 "100%"))  ; draw net
+(draw-rect (pong/pt 0 0) (color blackFill blackStroke) (pong/dim "100%" "100%"))  ; draw background
+(draw-rect (pong/pt "50%" 0) (color whiteFill blackStroke) (pong/dim 5 "100%"))  ; draw net
