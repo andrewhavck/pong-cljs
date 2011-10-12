@@ -1,3 +1,0 @@
-{:server-socket #<ServerSocket ServerSocket[addr=localhost/127.0.0.1,port=0,localport=22319]>, :connections #<Ref@1be1f3e: #{}>}
-{:server-socket #<ServerSocket ServerSocket[addr=localhost/127.0.0.1,port=0,localport=58580]>, :connections #<Ref@98d70d: #{}>}
-{:server-socket #<ServerSocket ServerSocket[addr=localhost/127.0.0.1,port=0,localport=26351]>, :connections #<Ref@8bf223: #{}>}

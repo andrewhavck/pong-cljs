@@ -1,3 +1,0 @@
-(System/getProperty "java.class.path")
-exit
-exit
