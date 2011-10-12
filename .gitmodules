@@ -1,0 +1,3 @@
+[submodule "vendor/clojurescript"]
+	path = vendor/clojurescript
+	url = https://github.com/clojure/clojurescript.git

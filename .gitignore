@@ -1,0 +1,11 @@
+# Compiled JS #
+.js
+
+# Generated ish #
+out/
+build/
+classes/
+lib/
+
+# OSX artifact #
+.DS_Store?
