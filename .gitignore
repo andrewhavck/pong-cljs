@@ -6,6 +6,13 @@ out/
 build/
 classes/
 lib/
+pom.xml
+
+#Cake artifacts
+.cake/*.pid
+.cake/*.log
+.cake/history
+.cake/run
 
 # OSX artifact #
 .DS_Store?
